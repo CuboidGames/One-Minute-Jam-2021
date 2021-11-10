@@ -21,7 +21,6 @@ namespace Gameplay.Puzzles.LeverSwitches
 
         private void Awake()
         {
-            // subcribe to leverwitches events
             foreach (LeverSwitch leverSwitch in _leverSwitches)
             {
                 leverSwitch.OnLeverSwitchToggled += LeverSwitchToggled;
@@ -83,6 +82,10 @@ namespace Gameplay.Puzzles.LeverSwitches
 
             _puzzleValue = newValue;
 
+            SetPuzzleState();
+        }
+
+        private void SetPuzzleState() {
             if (_puzzleValue == _targetPuzzleValue)
             {
                 _successLight.gameObject.SetActive(true);
