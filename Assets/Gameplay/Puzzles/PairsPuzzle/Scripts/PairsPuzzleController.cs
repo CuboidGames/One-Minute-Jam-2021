@@ -1,15 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Gameplay.Puzzles.Base;
 using UnityEngine;
 
 namespace Gameplay.Puzzles.Pairs
 {
-    public class PairsPuzzleController : MonoBehaviour
+    public class PairsPuzzleController : BasePuzzle
     {
         [SerializeField] private PairButton[] _pairObjects;
-        [SerializeField] private Transform _errorLight;
-        [SerializeField] private Transform _successLight;
 
         private PairColor[] _colors = { PairColor.RED, PairColor.BLUE, PairColor.GREEN, PairColor.YELLOW };
 
@@ -17,8 +16,10 @@ namespace Gameplay.Puzzles.Pairs
 
         private WaitForSeconds _waitForSeconds = new WaitForSeconds(0.5f);
 
-        private void Awake()
+        private new void Awake()
         {
+            base.Awake();
+
             if (_colors.Length * 2 != _pairObjects.Length)
             {
                 throw new System.Exception("Number of colors has to be half of the number of objects");
@@ -80,16 +81,7 @@ namespace Gameplay.Puzzles.Pairs
                 }
             }
 
-            if (isPuzzleSolved)
-            {
-                _successLight.gameObject.SetActive(true);
-                _errorLight.gameObject.SetActive(false);
-            }
-            else
-            {
-                _successLight.gameObject.SetActive(false);
-                _errorLight.gameObject.SetActive(true);
-            }
+            SetResolved(isPuzzleSolved);
         }
     }
 }

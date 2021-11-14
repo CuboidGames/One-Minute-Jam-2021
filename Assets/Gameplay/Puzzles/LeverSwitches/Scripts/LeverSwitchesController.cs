@@ -2,25 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Gameplay.Puzzles.Base;
 
 namespace Gameplay.Puzzles.LeverSwitches
 {
-    public class LeverSwitchesController : MonoBehaviour
+    public class LeverSwitchesController : BasePuzzle
     {
 
         [SerializeField] private Transform _puzzleTargetIndicator;
         [SerializeField] private Transform _puzzleValueIndicator;
-        [SerializeField] private Transform _errorLight;
-        [SerializeField] private Transform _successLight;
-
         [SerializeField] private LeverSwitch[] _leverSwitches;
 
         private float _puzzleValue;
         private float _targetPuzzleValue;
 
-        private void Awake()
+        private new void Awake()
         {
+            base.Awake();
+
             foreach (LeverSwitch leverSwitch in _leverSwitches)
             {
                 leverSwitch.OnLeverSwitchToggled += LeverSwitchToggled;
@@ -34,6 +33,13 @@ namespace Gameplay.Puzzles.LeverSwitches
         }
 
         private void Update()
+        {
+            if (!isLocked) {
+                LerpValueIndicator();
+            }
+        }
+
+        private void LerpValueIndicator()
         {
             var targetPosition = new Vector3(Mathf.Lerp(0.15f, -0.15f, _puzzleValue), _puzzleValueIndicator.localPosition.y, _puzzleValueIndicator.localPosition.z);
 
@@ -82,20 +88,7 @@ namespace Gameplay.Puzzles.LeverSwitches
 
             _puzzleValue = newValue;
 
-            SetPuzzleState();
-        }
-
-        private void SetPuzzleState() {
-            if (_puzzleValue == _targetPuzzleValue)
-            {
-                _successLight.gameObject.SetActive(true);
-                _errorLight.gameObject.SetActive(false);
-            }
-            else
-            {
-                _successLight.gameObject.SetActive(false);
-                _errorLight.gameObject.SetActive(true);
-            }
+            SetResolved(_puzzleValue == _targetPuzzleValue);
         }
     }
 }

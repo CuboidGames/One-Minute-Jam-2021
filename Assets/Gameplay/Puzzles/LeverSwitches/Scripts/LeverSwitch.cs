@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gameplay.Puzzles.Base;
 using UnityEngine;
 
 
 namespace Gameplay.Puzzles.LeverSwitches
 {
-    public class LeverSwitch : MonoBehaviour
+    public class LeverSwitch : MonoBehaviour, IInteractable
     {
         public event Action<LeverSwitch> OnLeverSwitchToggled;
 
@@ -20,6 +21,8 @@ namespace Gameplay.Puzzles.LeverSwitches
         public float offValue { get; private set; }
         private bool _isLeverOn = false;
         private float _targetRotation = -45;
+
+        private bool locked = false;
 
         void Awake()
         {
@@ -37,8 +40,17 @@ namespace Gameplay.Puzzles.LeverSwitches
 
         }
 
-        void Update()
+        private void Update()
         {
+            if (!locked)
+            {
+                HandleMouseClick();
+            }
+        }
+
+        private void HandleMouseClick()
+        {
+
             if (Input.GetMouseButtonDown(0))
             {
                 Ray ray = _raycastCamera.ScreenPointToRay(Input.mousePosition);
@@ -63,6 +75,16 @@ namespace Gameplay.Puzzles.LeverSwitches
         public float PipeValueCalculation(float input)
         {
             return input + (_isLeverOn ? onValue : offValue);
+        }
+
+        public void Lock()
+        {
+            locked = true;
+        }
+
+        public void Unlock()
+        {
+            locked = false;
         }
     }
 

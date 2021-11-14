@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 679023781690094348}
   - component: {fileID: 8713826405807126500}
   - component: {fileID: 3077536864773201023}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Lever
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543605123122498174}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0359, z: -0}
-  m_LocalScale: {x: 0.05, y: 0.075, z: 0.01}
+  m_LocalPosition: {x: 0, y: 0.08, z: -0}
+  m_LocalScale: {x: 0.1, y: 0.15, z: 0.02}
   m_Children: []
   m_Father: {fileID: 4633250260957932072}
   m_RootOrder: 0
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 7215052124221619918}
   - component: {fileID: 421601852715959036}
   - component: {fileID: 7973527723517334220}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Switch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ Transform:
   m_GameObject: {fileID: 2651223146597843185}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.77, y: 1.77, z: 1.77}
   m_Children:
   - {fileID: 5826523483546825593}
   - {fileID: 4633250260957932072}
@@ -124,8 +124,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.075, z: 0.1}
-  m_Center: {x: 0, y: 0.04, z: 0}
+  m_Size: {x: 0.2, y: 0.15, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7973527723517334220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 5826523483546825593}
   - component: {fileID: 4670495567957057156}
   - component: {fileID: 5382479025376452988}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SwitchPad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ Transform:
   m_GameObject: {fileID: 5516788934640418920}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.005, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.01, z: 0.1}
+  m_LocalScale: {x: 0.2, y: 0.01, z: 0.2}
   m_Children: []
   m_Father: {fileID: 7215052124221619918}
   m_RootOrder: 0
@@ -228,7 +228,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4633250260957932072}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LeverPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}

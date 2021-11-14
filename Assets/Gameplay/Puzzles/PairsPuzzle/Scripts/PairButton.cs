@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gameplay.Puzzles.Base;
 using UnityEngine;
 
 namespace Gameplay.Puzzles.Pairs
@@ -20,7 +21,7 @@ namespace Gameplay.Puzzles.Pairs
         public PairColor color;
     }
 
-    public class PairButton : MonoBehaviour
+    public class PairButton : MonoBehaviour, IInteractable
     {
 
         public bool isRevealed { get; private set; }
@@ -40,6 +41,7 @@ namespace Gameplay.Puzzles.Pairs
 
         [SerializeField] private Material _hiddenMaterial;
         [SerializeField] private Dictionary<PairColor, Material> _materialsMap;
+        private bool locked;
 
         private void Awake()
         {
@@ -61,6 +63,14 @@ namespace Gameplay.Puzzles.Pairs
         }
 
         private void Update()
+        {
+            if (!locked)
+            {
+                HandleMouseClick();
+            }
+        }
+
+        private void HandleMouseClick()
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -97,6 +107,16 @@ namespace Gameplay.Puzzles.Pairs
             {
                 OnPairButtonRevealed(this);
             }
+        }
+
+        public void Lock()
+        {
+            locked = true;
+        }
+
+        public void Unlock()
+        {
+            locked = false;
         }
     }
 }
