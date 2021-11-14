@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7029951514343778180}
   m_Layer: 0
   m_Name: LeverSwitchesPuzzle
-  m_TagString: Untagged
+  m_TagString: Puzzle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

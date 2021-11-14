@@ -34,7 +34,7 @@ namespace Gameplay.Puzzles.LeverSwitches
 
         private void Update()
         {
-            if (!isLocked) {
+            if (!IsLocked) {
                 LerpValueIndicator();
             }
         }

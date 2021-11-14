@@ -26,7 +26,7 @@ namespace Gameplay.Puzzles.MarkerHitter
 
         private void Update()
         {
-            if (!isLocked) {
+            if (!IsLocked) {
                 SetMarkerPosition();
             }
         }

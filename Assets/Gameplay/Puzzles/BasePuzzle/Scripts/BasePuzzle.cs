@@ -16,7 +16,9 @@ namespace Gameplay.Puzzles.Base
         [SerializeField] protected Transform errorLight;
         [SerializeField] protected Transform successLight;
 
-        protected bool isLocked = false;
+        public bool IsResolved { get; private set; }
+
+        protected bool IsLocked = false;
 
         event EventHandler<BasePuzzle> OnPuzzleResolved;
 
@@ -38,7 +40,7 @@ namespace Gameplay.Puzzles.Base
                 interactable.Lock();
             }
 
-            isLocked = true;
+            IsLocked = true;
         }
 
         public void Unlock()
@@ -48,13 +50,14 @@ namespace Gameplay.Puzzles.Base
                 interactable.Unlock();
             }
 
-            isLocked = false;
+            IsLocked = false;
         }
 
         protected void SetResolved(bool resolved)
         {
             if (resolved)
             {
+                IsResolved = true;
                 successLight.gameObject.SetActive(true);
                 errorLight.gameObject.SetActive(false);
 
@@ -67,6 +70,7 @@ namespace Gameplay.Puzzles.Base
             }
             else
             {
+                IsResolved = false;
                 Unlock();
 
                 successLight.gameObject.SetActive(false);
