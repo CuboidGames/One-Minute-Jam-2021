@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Gameplay.Managers.GameStateManager;
 using Gameplay.Puzzles.Base;
 using UnityEngine;
 
@@ -16,10 +17,13 @@ namespace Gameplay.Managers
         private float _currentGameTime = 0f;
         private List<BasePuzzle> _puzzles = new List<BasePuzzle>();
 
+        public List<BasePuzzle> puzzles {  get { return _puzzles; } }
+        private GameState gameState;
+
         public event Action OnGameStart;
 
         public event Action OnGameComplete;
-        public event Action OnGameTimeout;
+        public event Action OnGameEnd;
 
         public float currentGameTime
         {
@@ -33,28 +37,10 @@ namespace Gameplay.Managers
 
         private void Update()
         {
-            _currentGameTime = Time.time - _gameStartTime;
-
-            if (currentGameProgress >= 1f)
-            {
-                EndGame();
+            if (gameState != null) {
+                gameState.Update();
             }
 
-            bool allPuzzlesResolved = true;
-
-            foreach (var puzzle in _puzzles)
-            {
-                if (!puzzle.IsResolved)
-                {
-                    allPuzzlesResolved = false;
-                    break;
-                }
-            }
-
-            if (allPuzzlesResolved)
-            {
-                EndGame();
-            }
         }
 
         private void Awake()
@@ -80,10 +66,10 @@ namespace Gameplay.Managers
 
         private void Start()
         {
-            StartGame();
+            SetInitialState();
         }
 
-        private void StartGame()
+        public void StartGame()
         {
             _currentGameTime = 0f;
             _gameStartTime = Time.time;
@@ -94,23 +80,42 @@ namespace Gameplay.Managers
             }
         }
 
+        public void UpdateGameProgress()
+        {
+            // TODO: Use Time.deltaTime instead to handle states such as pause, animations, etc.
+            _currentGameTime = Time.time - _gameStartTime;
+
+        }
+
         private void EndGame()
         {
-            Debug.Log("Game ended");
+            if (OnGameEnd != null)
+            {
+                OnGameEnd.Invoke();
+            }
+        }
 
-            if (currentGameTime >= _gameDuration)
+        public void SetInitialState() {
+            if (gameState != null)
             {
-                Debug.Log("Game Over");
-            }
-            else
-            {
-                Debug.Log("Game completed");
+                gameState.Transition(GameStateEnum.Initializing);
+                return;
             }
 
-            if (OnGameTimeout != null)
+            gameState = new InitializingState(this);
+            gameState.OnEnter();
+        }
+
+        public void SetGameState(GameStateEnum state)
+        {
+            if (gameState == null)
             {
-                OnGameTimeout.Invoke();
+                SetInitialState();
             }
+
+            gameState.OnExit();
+            gameState = gameState.Transition(state);
+            gameState.OnEnter();
         }
     }
 }
