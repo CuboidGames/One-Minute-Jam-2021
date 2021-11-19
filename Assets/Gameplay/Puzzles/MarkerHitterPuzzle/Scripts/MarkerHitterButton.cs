@@ -13,6 +13,8 @@ namespace Gameplay.Puzzles.MarkerHitter
 
         private Camera _raycastCamera;
 
+        [SerializeField] private Renderer _renderer;
+
         [SerializeField] private Camera _customRaycastCamera;
         private bool locked;
 
@@ -48,9 +50,14 @@ namespace Gameplay.Puzzles.MarkerHitter
                 {
                     if (hit.collider.gameObject == gameObject)
                     {
-                        OnButtonPressed.Invoke();
+                        OnButtonPressed?.Invoke();
+                        SetMaterial(_onMaterial);
                     }
                 }
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                SetMaterial(_offMaterial);
             }
         }
 
@@ -62,6 +69,17 @@ namespace Gameplay.Puzzles.MarkerHitter
         public void Unlock()
         {
             locked = false;
+        }
+
+        [SerializeField] private Material _offMaterial;
+        [SerializeField] private Material _onMaterial;
+
+        private void SetMaterial(Material material)
+        {
+            Material[] mats = _renderer.materials;
+            mats[1] = material;
+
+            _renderer.materials = mats;
         }
     }
 }

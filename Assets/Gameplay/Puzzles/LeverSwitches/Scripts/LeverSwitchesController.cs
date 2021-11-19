@@ -3,18 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Gameplay.Puzzles.Base;
+using System.Linq;
 
 namespace Gameplay.Puzzles.LeverSwitches
 {
     public class LeverSwitchesController : BasePuzzle
     {
 
-        [SerializeField] private Transform _puzzleTargetIndicator;
-        [SerializeField] private Transform _puzzleValueIndicator;
+        [SerializeField] private LedLight[] _puzzleTargetIndicators;
+        [SerializeField] private LedLight[] _puzzleValueIndicators;
         [SerializeField] private LeverSwitch[] _leverSwitches;
 
-        private float _puzzleValue;
-        private float _targetPuzzleValue;
+        private int[] _puzzleValue;
+        private int[] _targetPuzzleValue;
 
         private new void Awake()
         {
@@ -22,6 +23,7 @@ namespace Gameplay.Puzzles.LeverSwitches
 
             foreach (LeverSwitch leverSwitch in _leverSwitches)
             {
+                leverSwitch.Init(_puzzleTargetIndicators.Length);
                 leverSwitch.OnLeverSwitchToggled += LeverSwitchToggled;
             }
         }
@@ -32,20 +34,6 @@ namespace Gameplay.Puzzles.LeverSwitches
             SetPuzzleValue();
         }
 
-        private void Update()
-        {
-            if (!IsLocked) {
-                LerpValueIndicator();
-            }
-        }
-
-        private void LerpValueIndicator()
-        {
-            var targetPosition = new Vector3(Mathf.Lerp(0.15f, -0.15f, _puzzleValue), _puzzleValueIndicator.localPosition.y, _puzzleValueIndicator.localPosition.z);
-
-            _puzzleValueIndicator.localPosition = Vector3.Lerp(_puzzleValueIndicator.localPosition, targetPosition, Time.deltaTime * 10);
-        }
-
         private void LeverSwitchToggled(LeverSwitch toggledLeverSwitch)
         {
             SetPuzzleValue();
@@ -53,33 +41,31 @@ namespace Gameplay.Puzzles.LeverSwitches
 
         private void SetTargetPuzzleValue()
         {
-            float targetValue = 0f;
+            int[] _targetValue = new int[_puzzleTargetIndicators.Length];
+            int[] currentValue = new int[_puzzleTargetIndicators.Length];
 
-            while (targetValue <= 0 || targetValue >= 1)
+            foreach (LeverSwitch leverSwitch in _leverSwitches)
             {
-                targetValue = 0f;
-
-                foreach (LeverSwitch leverSwitch in _leverSwitches)
+                if (UnityEngine.Random.value > 0.45f)
                 {
-                    if (UnityEngine.Random.value > 0.5f)
-                    {
-                        targetValue += leverSwitch.onValue;
-                    }
-                    else
-                    {
-                        targetValue += leverSwitch.offValue;
+                    for (var i = 0; i < _puzzleTargetIndicators.Length; i++) {
+                        if (leverSwitch.onValue[i]) {
+                            _targetValue[i] += 1;
+                        }
                     }
                 }
             }
 
-            _targetPuzzleValue = targetValue;
+            _targetPuzzleValue = _targetValue;
 
-            _puzzleTargetIndicator.localPosition = new Vector3(Mathf.Lerp(0.15f, -0.15f, _targetPuzzleValue), _puzzleTargetIndicator.localPosition.y, _puzzleTargetIndicator.localPosition.z);
+            for (var i = 0; i < _puzzleTargetIndicators.Length; i++) {
+                UpdateLed(_puzzleTargetIndicators[i], _targetValue[i]);
+            }
         }
 
         private void SetPuzzleValue()
         {
-            float newValue = 0f;
+            int[] newValue = new int[_puzzleValueIndicators.Length];
 
             foreach (LeverSwitch leverSwitch in _leverSwitches)
             {
@@ -88,7 +74,36 @@ namespace Gameplay.Puzzles.LeverSwitches
 
             _puzzleValue = newValue;
 
-            SetResolved(_puzzleValue == _targetPuzzleValue);
+            for (var i = 0; i < _puzzleValueIndicators.Length; i++) {
+                UpdateLed(_puzzleValueIndicators[i], _puzzleValue[i]);
+            }
+
+            SetResolved(_puzzleValue.SequenceEqual(_targetPuzzleValue));
+        }
+
+        private void UpdateLed(LedLight light, int value) {
+            switch (value) {
+                case 1:
+                    light.SetYellow();
+                    break;
+                case 2:
+                    light.SetGreen();
+                    break;
+                case 3:
+                    light.SetBlue();
+                    break;
+                case 4:
+                    light.SetPink();
+                    break;
+                case 5:
+                    light.SetRed();
+                    break;
+                default:
+                    light.SetOff();
+                    break;
+            }
+
         }
     }
+
 }

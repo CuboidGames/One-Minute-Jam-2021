@@ -313,6 +313,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FirstPersonWalker
       objectReference: {fileID: 0}
+    - target: {fileID: 1273852644323278, guid: 5d075d3ed32dfe1498e31454964d07e8, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 1457344649512708, guid: 5d075d3ed32dfe1498e31454964d07e8, type: 3}
       propertyPath: m_TagString
       value: MainCamera

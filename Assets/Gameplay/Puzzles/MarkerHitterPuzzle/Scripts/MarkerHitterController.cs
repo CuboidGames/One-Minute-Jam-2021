@@ -1,21 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Gameplay.Puzzles.Base;
+using Gameplay.Puzzles.Pairs;
 using UnityEngine;
 
 namespace Gameplay.Puzzles.MarkerHitter
 {
     public class MarkerHitterController : BasePuzzle
     {
-        [SerializeField] private Collider _marker;
-        [SerializeField] private Collider _targetArea;
         [SerializeField] private MarkerHitterButton _hitterButton;
-
-
-        [SerializeField] private float _timeMultiplier = 4.5f;
-        [SerializeField] private float _amplitude = 0.15f;
-        [SerializeField] private MarkerHitterIndicator[] _markerIndicators;
+        [SerializeField] private LedLight[] _markerLeds;
         private int _currentValidIndex = -1;
+
+        public bool canPress { get; private set; }
 
         private new void Awake()
         {
@@ -27,34 +25,67 @@ namespace Gameplay.Puzzles.MarkerHitter
         private void Update()
         {
             if (!IsLocked) {
-                SetMarkerPosition();
+                SetPressState();
+                SetMarkerVisibility();
             }
         }
 
-        private void SetMarkerPosition()
+        private void SetPressState()
         {
-            _marker.transform.localPosition = new Vector3(Mathf.Sin(Time.time * _timeMultiplier) * _amplitude, _marker.transform.localPosition.y, _marker.transform.localPosition.z);
+            canPress = (Time.time % 1) < 0.2f;
+        }
+
+        private void SetMarkerVisibility()
+        {
+            SetMaterial(canPress ? _onMaterial : _offMaterial);
         }
 
         private void OnButtonPressed()
         {
-            if (_marker.bounds.Intersects(_targetArea.bounds))
+            if (_lockClick) {
+                return;
+            }
+
+            if (canPress)
             {
                 _currentValidIndex++;
-
-                _markerIndicators[_currentValidIndex].SetValid();
+                _markerLeds[_currentValidIndex].SetGreen();
             }
             else
             {
-                foreach (var indicator in _markerIndicators)
-                {
-                    indicator.SetInvalid();
-                }
+                _currentValidIndex++;
+                _markerLeds[_currentValidIndex].SetRed();
+
+                SleepAndReset();
 
                 _currentValidIndex = -1;
             }
 
-            SetResolved(_currentValidIndex == _markerIndicators.Length - 1);
+            SetResolved(_currentValidIndex == _markerLeds.Length - 1);
+        }
+
+        private async void SleepAndReset() {
+            _lockClick = true;
+
+            await Task.Delay(300);
+
+            foreach (var led in _markerLeds)
+            {
+                led.SetOff();
+            }
+
+            _lockClick = false;
+        }
+
+        [SerializeField] private Material _offMaterial;
+        [SerializeField] private Material _onMaterial;
+
+        [SerializeField] private Renderer _renderer;
+        private bool _lockClick = false;
+
+        private void SetMaterial(Material material)
+        {
+            _renderer.material = material;
         }
     }
 }

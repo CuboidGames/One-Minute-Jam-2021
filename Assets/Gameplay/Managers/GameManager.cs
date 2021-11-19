@@ -22,6 +22,8 @@ namespace Gameplay.Managers
 
         public event Action OnGameStart;
 
+        public bool exitColliderTouched = false;
+
         public event Action OnGameComplete;
         public event Action OnGameEnd;
 
@@ -41,6 +43,7 @@ namespace Gameplay.Managers
                 gameState.Update();
             }
 
+            UpdateGameProgress();
         }
 
         private void Awake()
@@ -112,6 +115,10 @@ namespace Gameplay.Managers
             {
                 SetInitialState();
             }
+            
+            Debug.Log("Current state: " + gameState.GetType().Name);
+            Debug.Log("Next state: " + state);
+            
 
             gameState.OnExit();
             gameState = gameState.Transition(state);

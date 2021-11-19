@@ -60,6 +60,8 @@ namespace Gameplay.Puzzles.Pairs
             {
                 _raycastCamera = _customRaycastCamera;
             }
+
+            SetMaterial(_hiddenMaterial);
         }
 
         private void Update()
@@ -92,15 +94,23 @@ namespace Gameplay.Puzzles.Pairs
             _color = color;
         }
 
+        private void SetMaterial(Material material)
+        {
+            Material[] mats = _buttonRenderer.materials;
+            mats[1] = material;
+
+            _buttonRenderer.materials = mats;
+        }
+
         public void Conceal()
         {
-            _buttonRenderer.material = _hiddenMaterial;
+            SetMaterial(_hiddenMaterial);
             isRevealed = false;
         }
 
         public void Reveal()
         {
-            _buttonRenderer.material = _materialsMap[_color];
+            SetMaterial(_materialsMap[_color]);
             isRevealed = true;
 
             if (OnPairButtonRevealed != null)

@@ -15,20 +15,14 @@ namespace Gameplay.Puzzles.LeverSwitches
 
         [SerializeField] private Camera _customRaycastCamera;
 
-        [SerializeField] private GameObject _lever;
+        [SerializeField] private Renderer _renderer;
 
-        public float onValue { get; private set; }
-        public float offValue { get; private set; }
-        private bool _isLeverOn = false;
-        private float _targetRotation = -45;
-
+        public bool[] onValue { get; private set; }
+        private bool _isButtonOn = false;
         private bool locked = false;
 
         void Awake()
         {
-            onValue = UnityEngine.Random.Range(-0.2f, 0.2f);
-            offValue = UnityEngine.Random.Range(-0.2f, 0.2f);
-
             if (!_customRaycastCamera)
             {
                 _raycastCamera = Camera.main;
@@ -38,6 +32,7 @@ namespace Gameplay.Puzzles.LeverSwitches
                 _raycastCamera = _customRaycastCamera;
             }
 
+            SetMaterial(_isButtonOn ? _onMaterial : _offMaterial);
         }
 
         private void Update()
@@ -45,6 +40,14 @@ namespace Gameplay.Puzzles.LeverSwitches
             if (!locked)
             {
                 HandleMouseClick();
+            }
+        }
+
+        public void Init(int items) {
+            onValue = new bool[items];
+
+            for (var i = 0; i < items; i++) {
+                onValue[i] = UnityEngine.Random.value > 0.33f;
             }
         }
 
@@ -60,21 +63,29 @@ namespace Gameplay.Puzzles.LeverSwitches
                 {
                     if (hit.collider.gameObject == gameObject)
                     {
-                        _isLeverOn = !_isLeverOn;
-                        _targetRotation = _isLeverOn ? 45 : -45;
+                        _isButtonOn = !_isButtonOn;
+                        
+                        SetMaterial(_isButtonOn ? _onMaterial : _offMaterial);
 
                         OnLeverSwitchToggled.Invoke(this);
                     }
                 }
             }
-
-            // TOOD: Improve with async functions
-            _lever.transform.localRotation = Quaternion.Lerp(_lever.transform.localRotation, Quaternion.Euler(_targetRotation, 0, 0), Time.deltaTime * 10);
         }
 
-        public float PipeValueCalculation(float input)
+        public int[] PipeValueCalculation(int[] input)
         {
-            return input + (_isLeverOn ? onValue : offValue);
+            if (!_isButtonOn) {
+                return input;
+            }
+
+            int[] output = new int[input.Length];
+            
+            for (var i = 0; i < input.Length; i++) {
+                output[i] = input[i] + (onValue[i] ? 1 : 0);
+            }
+
+            return output;
         }
 
         public void Lock()
@@ -85,6 +96,17 @@ namespace Gameplay.Puzzles.LeverSwitches
         public void Unlock()
         {
             locked = false;
+        }
+
+        [SerializeField] private Material _offMaterial;
+        [SerializeField] private Material _onMaterial;
+
+        private void SetMaterial(Material material)
+        {
+            Material[] mats = _renderer.materials;
+            mats[1] = material;
+
+            _renderer.materials = mats;
         }
     }
 

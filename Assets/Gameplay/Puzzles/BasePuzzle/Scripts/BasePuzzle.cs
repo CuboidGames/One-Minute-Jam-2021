@@ -13,14 +13,13 @@ namespace Gameplay.Puzzles.Base
 
         protected List<IInteractable> actualInteractables = new List<IInteractable>();
 
-        [SerializeField] protected Transform errorLight;
-        [SerializeField] protected Transform successLight;
+        [SerializeField] protected ValidStateLight stateLight;
 
         public bool IsResolved { get; private set; }
 
         protected bool IsLocked = false;
 
-        event EventHandler<BasePuzzle> OnPuzzleResolved;
+        public event EventHandler<BasePuzzle> OnPuzzleResolved;
 
         protected void Awake()
         {
@@ -58,8 +57,7 @@ namespace Gameplay.Puzzles.Base
             if (resolved)
             {
                 IsResolved = true;
-                successLight.gameObject.SetActive(true);
-                errorLight.gameObject.SetActive(false);
+                stateLight.SetValid(true);
 
                 Lock();
 
@@ -73,8 +71,7 @@ namespace Gameplay.Puzzles.Base
                 IsResolved = false;
                 Unlock();
 
-                successLight.gameObject.SetActive(false);
-                errorLight.gameObject.SetActive(true);
+                stateLight.SetValid(false);
             }
         }
     }

@@ -51,17 +51,7 @@ namespace Gameplay.Managers.GameStateManager
 
         private bool IsGameCompleted()
         {
-            foreach (var puzzle in gameManager.puzzles)
-            {
-                if (!puzzle.IsResolved)
-                {
-                    return false;
-                }
-            }
-
-            // check also that player is standing in the exit platform
-
-            return true;
+            return gameManager.exitColliderTouched;
         }
     }
 }
