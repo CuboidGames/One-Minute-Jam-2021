@@ -6,8 +6,9 @@ namespace Gameplay.Managers.GameStateManager
     {
         public override async Task OnEnter()
         {
-            await sceneTransitionManager.FadeIn();
-            gameManager.SetGameState(GameStateEnum.Initializing);
+            await sceneTransitionManager.FadeIn(0.6f);
+            await gameManager.PlayGameOver();
+            sceneTransitionManager.LoadScene("IntroScene");
         }
 
         public override void Update()

@@ -49,16 +49,6 @@ namespace Gameplay.Puzzles.LeverSwitches
 
             foreach (LeverSwitch leverSwitch in _leverSwitches)
             {
-                print("----");
-                print("----");
-                print("----");
-                print("----");
-                print("----");
-                print("----");
-                foreach (int value in _targetValue)
-                {
-                    print(value);
-                }
                 if (UnityEngine.Random.value > 0.45f)
                 {
                     _targetValue = leverSwitch.PipeValueCalculation(_targetValue);

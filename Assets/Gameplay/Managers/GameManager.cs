@@ -43,8 +43,11 @@ namespace Gameplay.Managers
 
         [SerializeField] private AdvancedWalkerController playerWalkerController;
         [SerializeField] private CameraController playerCameraController;
+        [SerializeField] private AudioControl _playerAudioSource;
 
-        private AudioControl _playerAudioSource;
+        [SerializeField] private List<AudioSource> _gameAudios;
+        [SerializeField] private AudioSource _gameOverAudio;
+
 
         private void Update()
         {
@@ -115,6 +118,16 @@ namespace Gameplay.Managers
             {
                 OnGameStart.Invoke();
             }
+        }
+
+        public async Task PlayGameOver() {
+            foreach (var audio in _gameAudios)
+            {
+                audio.Stop();
+            }
+
+            _gameOverAudio.Play();
+            await Task.Delay(15000);
         }
 
         public void UpdateGameProgress()

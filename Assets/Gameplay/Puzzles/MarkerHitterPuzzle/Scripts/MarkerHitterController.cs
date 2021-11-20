@@ -99,6 +99,7 @@ namespace Gameplay.Puzzles.MarkerHitter
                 led.SetOff();
             }
 
+            _currentValidIndex = -1;
             _lockClick = false;
 
             SetResolved(false);
