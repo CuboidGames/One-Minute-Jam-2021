@@ -2,18 +2,6 @@ namespace Gameplay.Managers.GameStateManager
 {
     public class InitializingState : GameState
     {
-        public InitializingState(GameManager gameManager) : base(gameManager) { }
-
-        public override void OnEnter()
-        {
-            // noop
-        }
-
-        public override void OnExit()
-        {
-            // noop
-        }
-
         public override void Update()
         {
             gameManager.SetGameState(GameStateEnum.Intro);
@@ -23,7 +11,7 @@ namespace Gameplay.Managers.GameStateManager
         {
             if (state == GameStateEnum.Intro)
             {
-                return new IntroState(gameManager);
+                return new IntroState();
             }
 
 

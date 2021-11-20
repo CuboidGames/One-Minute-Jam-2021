@@ -23,13 +23,17 @@ namespace Gameplay.Puzzles.LeverSwitches
 
             foreach (LeverSwitch leverSwitch in _leverSwitches)
             {
-                leverSwitch.Init(_puzzleTargetIndicators.Length);
                 leverSwitch.OnLeverSwitchToggled += LeverSwitchToggled;
             }
         }
 
-        private void Start()
+        public override void Init()
         {
+            foreach (LeverSwitch leverSwitch in _leverSwitches)
+            {
+                leverSwitch.Init(_puzzleTargetIndicators.Length);
+            }
+
             SetTargetPuzzleValue();
             SetPuzzleValue();
         }
@@ -42,23 +46,29 @@ namespace Gameplay.Puzzles.LeverSwitches
         private void SetTargetPuzzleValue()
         {
             int[] _targetValue = new int[_puzzleTargetIndicators.Length];
-            int[] currentValue = new int[_puzzleTargetIndicators.Length];
 
             foreach (LeverSwitch leverSwitch in _leverSwitches)
             {
+                print("----");
+                print("----");
+                print("----");
+                print("----");
+                print("----");
+                print("----");
+                foreach (int value in _targetValue)
+                {
+                    print(value);
+                }
                 if (UnityEngine.Random.value > 0.45f)
                 {
-                    for (var i = 0; i < _puzzleTargetIndicators.Length; i++) {
-                        if (leverSwitch.onValue[i]) {
-                            _targetValue[i] += 1;
-                        }
-                    }
+                    _targetValue = leverSwitch.PipeValueCalculation(_targetValue);
                 }
             }
 
             _targetPuzzleValue = _targetValue;
 
-            for (var i = 0; i < _puzzleTargetIndicators.Length; i++) {
+            for (var i = 0; i < _puzzleTargetIndicators.Length; i++)
+            {
                 UpdateLed(_puzzleTargetIndicators[i], _targetValue[i]);
             }
         }
@@ -69,20 +79,23 @@ namespace Gameplay.Puzzles.LeverSwitches
 
             foreach (LeverSwitch leverSwitch in _leverSwitches)
             {
-                newValue = leverSwitch.PipeValueCalculation(newValue);
+                newValue = leverSwitch.PipeValueCalculationConditional(newValue);
             }
 
             _puzzleValue = newValue;
 
-            for (var i = 0; i < _puzzleValueIndicators.Length; i++) {
+            for (var i = 0; i < _puzzleValueIndicators.Length; i++)
+            {
                 UpdateLed(_puzzleValueIndicators[i], _puzzleValue[i]);
             }
 
             SetResolved(_puzzleValue.SequenceEqual(_targetPuzzleValue));
         }
 
-        private void UpdateLed(LedLight light, int value) {
-            switch (value) {
+        private void UpdateLed(LedLight light, int value)
+        {
+            switch (value)
+            {
                 case 1:
                     light.SetYellow();
                     break;

@@ -25,15 +25,12 @@ namespace Gameplay.Puzzles.Pairs
                 throw new System.Exception("Number of colors has to be half of the number of objects");
             }
 
-
-            _pairObjects = _pairObjects.OrderBy(x => Random.Range(-1, 2)).ToArray();
         }
 
         private void Start()
         {
             for (var i = 0; i < _pairObjects.Length; i++)
             {
-                _pairObjects[i].SetColor(_colors[(int)(i / 2)]);
                 _pairObjects[i].OnPairButtonRevealed += PairButtonRevealed;
             }
         }
@@ -75,9 +72,9 @@ namespace Gameplay.Puzzles.Pairs
         {
             var isPuzzleSolved = true;
 
-            for (var i = 0; i < _pairObjects.Length; i++)
+            foreach (var pairButton in _pairObjects)
             {
-                if (!_pairObjects[i].isRevealed)
+                if (!pairButton.isRevealed)
                 {
                     isPuzzleSolved = false;
                     break;
@@ -85,6 +82,19 @@ namespace Gameplay.Puzzles.Pairs
             }
 
             SetResolved(isPuzzleSolved);
+        }
+
+        public override void Init()
+        {
+            _pairObjects = _pairObjects.OrderBy(x => Random.Range(-1, 2)).ToArray();
+
+            for (var i = 0; i < _pairObjects.Length; i++)
+            {
+                _pairObjects[i].SetColor(_colors[(int)(i / 2)]);
+                _pairObjects[i].Conceal();
+            }
+
+            SetResolved(false);
         }
     }
 }

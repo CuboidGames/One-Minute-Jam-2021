@@ -36,6 +36,8 @@ namespace Gameplay.Puzzles.Base
             _audioSource = GetComponent<AudioSource>();
         }
 
+        public abstract void Init();
+
         public void Lock()
         {
             foreach (var interactable in actualInteractables)

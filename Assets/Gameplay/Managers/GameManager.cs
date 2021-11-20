@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using CMF;
 using Gameplay.Managers.GameStateManager;
 using Gameplay.Puzzles.Base;
 using UnityEngine;
@@ -17,7 +19,7 @@ namespace Gameplay.Managers
         private float _currentGameTime = 0f;
         private List<BasePuzzle> _puzzles = new List<BasePuzzle>();
 
-        public List<BasePuzzle> puzzles {  get { return _puzzles; } }
+        public List<BasePuzzle> puzzles { get { return _puzzles; } }
         private GameState gameState;
 
         public event Action OnGameStart;
@@ -37,9 +39,17 @@ namespace Gameplay.Managers
             get { return _currentGameTime / _gameDuration; }
         }
 
+        [SerializeField] private Transform playerStartingPosition;
+
+        [SerializeField] private AdvancedWalkerController playerWalkerController;
+        [SerializeField] private CameraController playerCameraController;
+
+        private AudioControl _playerAudioSource;
+
         private void Update()
         {
-            if (gameState != null) {
+            if (gameState != null)
+            {
                 gameState.Update();
             }
 
@@ -65,17 +75,41 @@ namespace Gameplay.Managers
             {
                 _puzzles.Add(puzzleGameObjects[i].GetComponent<BasePuzzle>());
             }
+
+            _playerAudioSource = playerWalkerController.GetComponent<AudioControl>();
         }
 
-        private void Start()
+        private async void Start()
         {
-            SetInitialState();
+            await SetInitialState();
+        }
+
+        public void EnablePlayer()
+        {
+            _playerAudioSource.audioClipVolume = 0.2f;
+            playerWalkerController.transform.position = playerStartingPosition.position;
+            playerCameraController.SetRotationAngles(playerStartingPosition.rotation.eulerAngles.x, playerStartingPosition.rotation.eulerAngles.y);
+            playerWalkerController.enabled = true;
+            playerCameraController.enabled = true;
+        }
+
+        public void DisablePlayer()
+        {
+            _playerAudioSource.audioClipVolume = 0f;
+            playerWalkerController.enabled = false;
+            playerCameraController.enabled = false;
         }
 
         public void StartGame()
         {
             _currentGameTime = 0f;
             _gameStartTime = Time.time;
+            exitColliderTouched = false;
+            
+            foreach (var puzzle in _puzzles)
+            {
+                puzzle.Init();
+            }
 
             if (OnGameStart != null)
             {
@@ -90,7 +124,7 @@ namespace Gameplay.Managers
 
         }
 
-        private void EndGame()
+        public void EndGame()
         {
             if (OnGameEnd != null)
             {
@@ -98,31 +132,34 @@ namespace Gameplay.Managers
             }
         }
 
-        public void SetInitialState() {
+        public async Task SetInitialState()
+        {
             if (gameState != null)
             {
                 gameState.Transition(GameStateEnum.Initializing);
+
+                await Task.CompletedTask;
                 return;
             }
 
-            gameState = new InitializingState(this);
-            gameState.OnEnter();
+            gameState = new InitializingState();
+            await gameState.OnEnter();
         }
 
-        public void SetGameState(GameStateEnum state)
+        public async Task SetGameState(GameStateEnum state)
         {
             if (gameState == null)
             {
-                SetInitialState();
+                await SetInitialState();
             }
-            
+
             Debug.Log("Current state: " + gameState.GetType().Name);
             Debug.Log("Next state: " + state);
-            
 
-            gameState.OnExit();
+
+            await gameState.OnExit();
             gameState = gameState.Transition(state);
-            gameState.OnEnter();
+            await gameState.OnEnter();
         }
     }
 }

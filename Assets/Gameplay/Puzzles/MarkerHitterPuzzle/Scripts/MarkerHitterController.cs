@@ -37,6 +37,7 @@ namespace Gameplay.Puzzles.MarkerHitter
 
         private void SetMarkerVisibility()
         {
+            _pressLabel.SetActive(canPress);
             SetMaterial(canPress ? _onMaterial : _offMaterial);
         }
 
@@ -79,6 +80,7 @@ namespace Gameplay.Puzzles.MarkerHitter
             _lockClick = false;
         }
 
+        [SerializeField] private GameObject _pressLabel;
         [SerializeField] private Material _offMaterial;
         [SerializeField] private Material _onMaterial;
 
@@ -88,6 +90,18 @@ namespace Gameplay.Puzzles.MarkerHitter
         private void SetMaterial(Material material)
         {
             _renderer.material = material;
+        }
+
+        public override void Init()
+        {
+            foreach (var led in _markerLeds)
+            {
+                led.SetOff();
+            }
+
+            _lockClick = false;
+
+            SetResolved(false);
         }
     }
 }

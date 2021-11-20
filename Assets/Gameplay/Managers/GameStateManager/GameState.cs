@@ -1,16 +1,26 @@
+using System.Threading.Tasks;
+
 namespace Gameplay.Managers.GameStateManager
 {
     public abstract class GameState
     {
         protected GameManager gameManager;
+        protected SceneTransitionManager sceneTransitionManager;
 
-        public GameState(GameManager gameManager)
+        public GameState()
         {
-            this.gameManager = gameManager;
+            this.gameManager = GameManager.Instance;
+            this.sceneTransitionManager = SceneTransitionManager.Instance;
         }
 
-        public abstract void OnEnter();
-        public abstract void OnExit();
+        public virtual async Task OnEnter() {
+            await Task.Yield();
+        }
+
+        public virtual async Task OnExit() {
+            await Task.Yield();
+        }
+
         public abstract void Update();
 
         public abstract GameState Transition(GameStateEnum state);

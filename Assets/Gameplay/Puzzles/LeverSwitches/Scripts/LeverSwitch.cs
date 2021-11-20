@@ -38,8 +38,6 @@ namespace Gameplay.Puzzles.LeverSwitches
             }
 
             _audioSource = GetComponent<AudioSource>();
-
-            SetMaterial(_isButtonOn ? _onMaterial : _offMaterial);
         }
 
         private void Update()
@@ -51,6 +49,9 @@ namespace Gameplay.Puzzles.LeverSwitches
         }
 
         public void Init(int items) {
+            _isButtonOn = false;
+            SetMaterial(_offMaterial);
+
             onValue = new bool[items];
 
             for (var i = 0; i < items; i++) {
@@ -82,12 +83,17 @@ namespace Gameplay.Puzzles.LeverSwitches
             }
         }
 
-        public int[] PipeValueCalculation(int[] input)
+        public int[] PipeValueCalculationConditional(int[] input)
         {
             if (!_isButtonOn) {
                 return input;
             }
 
+            return PipeValueCalculation(input);
+        }
+
+        public int[] PipeValueCalculation(int[] input)
+        {
             int[] output = new int[input.Length];
             
             for (var i = 0; i < input.Length; i++) {

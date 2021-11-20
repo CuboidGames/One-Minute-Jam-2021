@@ -1035,6 +1035,7 @@ MonoBehaviour:
   - {fileID: 3540161292896562130}
   - {fileID: 4426319225815172548}
   - {fileID: 583968416579707882}
+  _pressLabel: {fileID: 3934002171082789369}
   _offMaterial: {fileID: 2100000, guid: 6fb3b16a19287c44d9e05bf9f0a84e0b, type: 2}
   _onMaterial: {fileID: 2100000, guid: 6df669e5f49423141bba6c416ff7e889, type: 2}
   _renderer: {fileID: 6120473290891100985}
