@@ -18,6 +18,8 @@ namespace Gameplay.Puzzles.Base
         public bool IsResolved { get; private set; }
 
         protected bool IsLocked = false;
+        private AudioSource _audioSource;
+        [SerializeField] private AudioClip _puzzleResolvedSound;
 
         public event EventHandler<BasePuzzle> OnPuzzleResolved;
 
@@ -30,6 +32,8 @@ namespace Gameplay.Puzzles.Base
                     actualInteractables.Add(actualInteractable);
                 }
             }
+
+            _audioSource = GetComponent<AudioSource>();
         }
 
         public void Lock()
@@ -58,6 +62,7 @@ namespace Gameplay.Puzzles.Base
             {
                 IsResolved = true;
                 stateLight.SetValid(true);
+                _audioSource.PlayOneShot(_puzzleResolvedSound);
 
                 Lock();
 

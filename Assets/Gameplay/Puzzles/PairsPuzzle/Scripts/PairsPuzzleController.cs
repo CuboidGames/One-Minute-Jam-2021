@@ -42,16 +42,19 @@ namespace Gameplay.Puzzles.Pairs
         {
             if (!_lastButton) {
                 _lastButton = pairButton;
+                pairButton.PlaySuccess();
                 return;
             }
 
             if (_lastButton.color != pairButton.color)
             {
+                pairButton.PlayError();
                 StartCoroutine(ConcealAllButtons());
                 _lastButton = null;
                 return;
             }
 
+            pairButton.PlaySuccess();
             _lastButton = null;
             SetPuzzleState();
         }

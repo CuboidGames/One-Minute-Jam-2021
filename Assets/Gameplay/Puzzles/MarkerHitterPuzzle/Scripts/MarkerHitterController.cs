@@ -40,7 +40,7 @@ namespace Gameplay.Puzzles.MarkerHitter
             SetMaterial(canPress ? _onMaterial : _offMaterial);
         }
 
-        private void OnButtonPressed()
+        private void OnButtonPressed(MarkerHitterButton button)
         {
             if (_lockClick) {
                 return;
@@ -50,11 +50,13 @@ namespace Gameplay.Puzzles.MarkerHitter
             {
                 _currentValidIndex++;
                 _markerLeds[_currentValidIndex].SetGreen();
+                button.PlaySuccess();
             }
             else
             {
                 _currentValidIndex++;
                 _markerLeds[_currentValidIndex].SetRed();
+                button.PlkayError();
 
                 SleepAndReset();
 

@@ -21,6 +21,11 @@ namespace Gameplay.Puzzles.LeverSwitches
         private bool _isButtonOn = false;
         private bool locked = false;
 
+        private AudioSource _audioSource;
+
+        [SerializeField] private AudioClip _successBeep;
+        [SerializeField] private AudioClip _errorBeep;
+
         void Awake()
         {
             if (!_customRaycastCamera)
@@ -31,6 +36,8 @@ namespace Gameplay.Puzzles.LeverSwitches
             {
                 _raycastCamera = _customRaycastCamera;
             }
+
+            _audioSource = GetComponent<AudioSource>();
 
             SetMaterial(_isButtonOn ? _onMaterial : _offMaterial);
         }
@@ -68,6 +75,8 @@ namespace Gameplay.Puzzles.LeverSwitches
                         SetMaterial(_isButtonOn ? _onMaterial : _offMaterial);
 
                         OnLeverSwitchToggled.Invoke(this);
+
+                        _audioSource.PlayOneShot(_successBeep);
                     }
                 }
             }

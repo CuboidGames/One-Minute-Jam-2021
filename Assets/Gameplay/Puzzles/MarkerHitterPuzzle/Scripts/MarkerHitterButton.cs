@@ -9,7 +9,7 @@ namespace Gameplay.Puzzles.MarkerHitter
 {
     public class MarkerHitterButton : MonoBehaviour, IInteractable
     {
-        public event Action OnButtonPressed;
+        public event Action<MarkerHitterButton> OnButtonPressed;
 
         private Camera _raycastCamera;
 
@@ -17,6 +17,11 @@ namespace Gameplay.Puzzles.MarkerHitter
 
         [SerializeField] private Camera _customRaycastCamera;
         private bool locked;
+
+        private AudioSource _audioSource;
+
+        [SerializeField] private AudioClip _successBeep;
+        [SerializeField] private AudioClip _errorBeep;
 
         void Awake()
         {
@@ -29,6 +34,7 @@ namespace Gameplay.Puzzles.MarkerHitter
                 _raycastCamera = _customRaycastCamera;
             }
 
+            _audioSource = GetComponent<AudioSource>();
         }
 
         void Update()
@@ -50,7 +56,7 @@ namespace Gameplay.Puzzles.MarkerHitter
                 {
                     if (hit.collider.gameObject == gameObject)
                     {
-                        OnButtonPressed?.Invoke();
+                        OnButtonPressed?.Invoke(this);
                         SetMaterial(_onMaterial);
                     }
                 }
@@ -69,6 +75,14 @@ namespace Gameplay.Puzzles.MarkerHitter
         public void Unlock()
         {
             locked = false;
+        }
+
+        public void PlaySuccess() {
+            _audioSource.PlayOneShot(_successBeep);
+        }
+
+        public void PlkayError() {
+            _audioSource.PlayOneShot(_errorBeep);
         }
 
         [SerializeField] private Material _offMaterial;

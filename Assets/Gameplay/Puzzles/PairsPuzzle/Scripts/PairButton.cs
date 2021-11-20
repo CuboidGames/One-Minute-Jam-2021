@@ -41,6 +41,12 @@ namespace Gameplay.Puzzles.Pairs
 
         [SerializeField] private Material _hiddenMaterial;
         [SerializeField] private Dictionary<PairColor, Material> _materialsMap;
+
+        private AudioSource _audioSource;
+
+        [SerializeField] private AudioClip _successBeep;
+        [SerializeField] private AudioClip _errorBeep;
+
         private bool locked;
 
         private void Awake()
@@ -60,6 +66,8 @@ namespace Gameplay.Puzzles.Pairs
             {
                 _raycastCamera = _customRaycastCamera;
             }
+
+            _audioSource = GetComponent<AudioSource>();
 
             SetMaterial(_hiddenMaterial);
         }
@@ -92,6 +100,14 @@ namespace Gameplay.Puzzles.Pairs
         public void SetColor(PairColor color)
         {
             _color = color;
+        }
+
+        public void PlaySuccess() {
+            _audioSource.PlayOneShot(_successBeep);
+        }
+
+        public void PlayError() {
+            _audioSource.PlayOneShot(_errorBeep);
         }
 
         private void SetMaterial(Material material)
