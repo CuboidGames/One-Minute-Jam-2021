@@ -8,7 +8,7 @@ namespace Gameplay.Managers.GameStateManager
         {
             await sceneTransitionManager.FadeIn(0.6f);
             await gameManager.PlayGameOver();
-            sceneTransitionManager.LoadScene("IntroScene");
+            sceneTransitionManager.LoadScene("MenuScene");
         }
 
         public override void Update()

@@ -48,6 +48,8 @@ namespace Gameplay.Managers
         [SerializeField] private List<AudioSource> _gameAudios;
         [SerializeField] private AudioSource _gameOverAudio;
 
+        [SerializeField] private Animator _gameOverAnimator;
+
 
         private void Update()
         {
@@ -127,7 +129,9 @@ namespace Gameplay.Managers
             }
 
             _gameOverAudio.Play();
-            await Task.Delay(15000);
+            await Task.Delay(2000);
+            _gameOverAnimator.SetBool("GameOver", true);
+            await Task.Delay(12000);
         }
 
         public void UpdateGameProgress()
