@@ -41,6 +41,12 @@ namespace Gameplay.Puzzles.Pairs
 
         [SerializeField] private Material _hiddenMaterial;
         [SerializeField] private Dictionary<PairColor, Material> _materialsMap;
+
+        private AudioSource _audioSource;
+
+        [SerializeField] private AudioClip _successBeep;
+        [SerializeField] private AudioClip _errorBeep;
+
         private bool locked;
 
         private void Awake()
@@ -60,6 +66,10 @@ namespace Gameplay.Puzzles.Pairs
             {
                 _raycastCamera = _customRaycastCamera;
             }
+
+            _audioSource = GetComponent<AudioSource>();
+
+            SetMaterial(_hiddenMaterial);
         }
 
         private void Update()
@@ -92,15 +102,31 @@ namespace Gameplay.Puzzles.Pairs
             _color = color;
         }
 
+        public void PlaySuccess() {
+            _audioSource.PlayOneShot(_successBeep);
+        }
+
+        public void PlayError() {
+            _audioSource.PlayOneShot(_errorBeep);
+        }
+
+        private void SetMaterial(Material material)
+        {
+            Material[] mats = _buttonRenderer.materials;
+            mats[1] = material;
+
+            _buttonRenderer.materials = mats;
+        }
+
         public void Conceal()
         {
-            _buttonRenderer.material = _hiddenMaterial;
+            SetMaterial(_hiddenMaterial);
             isRevealed = false;
         }
 
         public void Reveal()
         {
-            _buttonRenderer.material = _materialsMap[_color];
+            SetMaterial(_materialsMap[_color]);
             isRevealed = true;
 
             if (OnPairButtonRevealed != null)

@@ -1,17 +1,21 @@
+using System.Threading.Tasks;
+
 namespace Gameplay.Managers.GameStateManager
 {
     public class GameplayState : GameState
     {
-        public GameplayState(GameManager gameManager) : base(gameManager) { }
-
-        public override void OnEnter()
+        public override async Task OnEnter()
         {
+            gameManager.EnablePlayer();
             gameManager.StartGame();
+            await sceneTransitionManager.FadeOut();
         }
 
-        public override void OnExit()
+        public override async Task OnExit()
         {
-            // noop
+            gameManager.DisablePlayer();
+            gameManager.EndGame();
+            await Task.CompletedTask;
         }
 
         public override void Update()
@@ -34,9 +38,9 @@ namespace Gameplay.Managers.GameStateManager
             switch (state)
             {
                 case GameStateEnum.CompletedOutro:
-                    return new CompletedOutroState(gameManager);
+                    return new CompletedOutroState();
                 case GameStateEnum.FailedOutro:
-                    return new FailedOutroState(gameManager);
+                    return new FailedOutroState();
             }
 
 
@@ -51,17 +55,7 @@ namespace Gameplay.Managers.GameStateManager
 
         private bool IsGameCompleted()
         {
-            foreach (var puzzle in gameManager.puzzles)
-            {
-                if (!puzzle.IsResolved)
-                {
-                    return false;
-                }
-            }
-
-            // check also that player is standing in the exit platform
-
-            return true;
+            return gameManager.exitColliderTouched;
         }
     }
 }

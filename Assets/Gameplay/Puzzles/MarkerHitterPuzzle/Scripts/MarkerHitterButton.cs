@@ -9,12 +9,19 @@ namespace Gameplay.Puzzles.MarkerHitter
 {
     public class MarkerHitterButton : MonoBehaviour, IInteractable
     {
-        public event Action OnButtonPressed;
+        public event Action<MarkerHitterButton> OnButtonPressed;
 
         private Camera _raycastCamera;
 
+        [SerializeField] private Renderer _renderer;
+
         [SerializeField] private Camera _customRaycastCamera;
         private bool locked;
+
+        private AudioSource _audioSource;
+
+        [SerializeField] private AudioClip _successBeep;
+        [SerializeField] private AudioClip _errorBeep;
 
         void Awake()
         {
@@ -27,6 +34,7 @@ namespace Gameplay.Puzzles.MarkerHitter
                 _raycastCamera = _customRaycastCamera;
             }
 
+            _audioSource = GetComponent<AudioSource>();
         }
 
         void Update()
@@ -48,9 +56,14 @@ namespace Gameplay.Puzzles.MarkerHitter
                 {
                     if (hit.collider.gameObject == gameObject)
                     {
-                        OnButtonPressed.Invoke();
+                        OnButtonPressed?.Invoke(this);
+                        SetMaterial(_onMaterial);
                     }
                 }
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                SetMaterial(_offMaterial);
             }
         }
 
@@ -62,6 +75,25 @@ namespace Gameplay.Puzzles.MarkerHitter
         public void Unlock()
         {
             locked = false;
+        }
+
+        public void PlaySuccess() {
+            _audioSource.PlayOneShot(_successBeep);
+        }
+
+        public void PlkayError() {
+            _audioSource.PlayOneShot(_errorBeep);
+        }
+
+        [SerializeField] private Material _offMaterial;
+        [SerializeField] private Material _onMaterial;
+
+        private void SetMaterial(Material material)
+        {
+            Material[] mats = _renderer.materials;
+            mats[1] = material;
+
+            _renderer.materials = mats;
         }
     }
 }

@@ -13,14 +13,15 @@ namespace Gameplay.Puzzles.Base
 
         protected List<IInteractable> actualInteractables = new List<IInteractable>();
 
-        [SerializeField] protected Transform errorLight;
-        [SerializeField] protected Transform successLight;
+        [SerializeField] protected ValidStateLight stateLight;
 
         public bool IsResolved { get; private set; }
 
         protected bool IsLocked = false;
+        private AudioSource _audioSource;
+        [SerializeField] private AudioClip _puzzleResolvedSound;
 
-        event EventHandler<BasePuzzle> OnPuzzleResolved;
+        public event EventHandler<BasePuzzle> OnPuzzleResolved;
 
         protected void Awake()
         {
@@ -31,7 +32,11 @@ namespace Gameplay.Puzzles.Base
                     actualInteractables.Add(actualInteractable);
                 }
             }
+
+            _audioSource = GetComponent<AudioSource>();
         }
+
+        public abstract void Init();
 
         public void Lock()
         {
@@ -58,8 +63,8 @@ namespace Gameplay.Puzzles.Base
             if (resolved)
             {
                 IsResolved = true;
-                successLight.gameObject.SetActive(true);
-                errorLight.gameObject.SetActive(false);
+                stateLight.SetValid(true);
+                _audioSource.PlayOneShot(_puzzleResolvedSound);
 
                 Lock();
 
@@ -73,8 +78,7 @@ namespace Gameplay.Puzzles.Base
                 IsResolved = false;
                 Unlock();
 
-                successLight.gameObject.SetActive(false);
-                errorLight.gameObject.SetActive(true);
+                stateLight.SetValid(false);
             }
         }
     }

@@ -21,7 +21,7 @@ namespace Level.Timer
             var gameProgress = Mathf.Lerp(0, Mathf.PI * 2, _gameManager.currentGameProgress);
 
             transform.localPosition = _initialPosition + new Vector3(
-                -Mathf.Sin(gameProgress) * _transformRadius,
+                Mathf.Sin(gameProgress) * _transformRadius,
                 Mathf.Cos(gameProgress) * _transformRadius,
                 0
             );

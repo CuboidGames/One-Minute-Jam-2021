@@ -1,17 +1,14 @@
+using System.Threading.Tasks;
+
 namespace Gameplay.Managers.GameStateManager
 {
     public class FailedOutroState : GameState
     {
-        public FailedOutroState(GameManager gameManager) : base(gameManager) { }
-
-        public override void OnEnter()
+        public override async Task OnEnter()
         {
-            // noop
-        }
-
-        public override void OnExit()
-        {
-            // noop
+            await sceneTransitionManager.FadeIn(0.6f);
+            await gameManager.PlayGameOver();
+            sceneTransitionManager.LoadScene("MenuScene");
         }
 
         public override void Update()
@@ -23,7 +20,7 @@ namespace Gameplay.Managers.GameStateManager
         {
             if (state == GameStateEnum.Initializing)
             {
-                return new InitializingState(gameManager);
+                return new InitializingState();
             }
 
 
