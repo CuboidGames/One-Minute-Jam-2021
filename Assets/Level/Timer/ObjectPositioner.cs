@@ -17,7 +17,8 @@ namespace Level.Timer
             _initialPosition = transform.localPosition;
         }
 
-        private void Update() {
+        private void Update()
+        {
             var gameProgress = Mathf.Lerp(0, Mathf.PI * 2, _gameManager.currentGameProgress);
 
             transform.localPosition = _initialPosition + new Vector3(

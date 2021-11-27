@@ -45,8 +45,9 @@ namespace Gameplay.Player
             running = false;
             await SceneTransitionManager.Instance.FadeIn(2f);
             _audioSource.PlayOneShot(_exitSceneClip);
+
             await Task.Delay(1000);
-            // load new scene
+
             SceneTransitionManager.Instance.LoadScene("MainScene");
         }
 

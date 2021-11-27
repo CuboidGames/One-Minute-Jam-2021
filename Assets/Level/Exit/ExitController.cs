@@ -17,12 +17,14 @@ public class ExitController : MonoBehaviour
     [SerializeField] private ParticleSystem _smokeEmitter1;
     [SerializeField] private ParticleSystem _smokeEmitter2;
 
-    private void Awake() {
+    private void Awake()
+    {
         _exitCollider.enabled = false;
 
         var puzzleTags = GameObject.FindGameObjectsWithTag("Puzzle");
 
-        foreach (var puzzle in puzzleTags) {
+        foreach (var puzzle in puzzleTags)
+        {
             var puzzleComponent = puzzle.GetComponent<BasePuzzle>();
 
             puzzleComponent.OnPuzzleResolved += PuzzleResolved;
@@ -35,8 +37,10 @@ public class ExitController : MonoBehaviour
 
     private void PuzzleResolved(object sender, BasePuzzle e)
     {
-        foreach (var puzzle in puzzles) {
-            if (!puzzle.IsResolved) {
+        foreach (var puzzle in puzzles)
+        {
+            if (!puzzle.IsResolved)
+            {
                 return;
             }
         }
@@ -45,7 +49,8 @@ public class ExitController : MonoBehaviour
     }
 
     [ContextMenu("UnlockExit")]
-    private async void UnlockExit() {
+    private async void UnlockExit()
+    {
         _doorLight.SetValid(true);
         _exitCollider.enabled = true;
         _audioSource.PlayOneShot(_doorOpenSound);

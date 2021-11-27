@@ -9,7 +9,7 @@ public class ValidStateLight : MonoBehaviour
 
     private bool _valid = false;
 
-    public void SetValid(bool valid) 
+    public void SetValid(bool valid)
     {
         _valid = valid;
 

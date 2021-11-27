@@ -102,11 +102,13 @@ namespace Gameplay.Puzzles.Pairs
             _color = color;
         }
 
-        public void PlaySuccess() {
+        public void PlaySuccess()
+        {
             _audioSource.PlayOneShot(_successBeep);
         }
 
-        public void PlayError() {
+        public void PlayError()
+        {
             _audioSource.PlayOneShot(_errorBeep);
         }
 

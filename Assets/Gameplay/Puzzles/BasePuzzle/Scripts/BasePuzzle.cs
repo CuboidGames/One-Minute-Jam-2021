@@ -9,19 +9,17 @@ namespace Gameplay.Puzzles.Base
     public abstract class BasePuzzle : MonoBehaviour
     {
 
+        public event EventHandler<BasePuzzle> OnPuzzleResolved;
+
         [SerializeField] private GameObject[] _interactables;
+        [SerializeField] protected ValidStateLight stateLight;
+        [SerializeField] private AudioClip _puzzleResolvedSound;
+        protected bool IsLocked = false;
 
         protected List<IInteractable> actualInteractables = new List<IInteractable>();
-
-        [SerializeField] protected ValidStateLight stateLight;
-
         public bool IsResolved { get; private set; }
 
-        protected bool IsLocked = false;
         private AudioSource _audioSource;
-        [SerializeField] private AudioClip _puzzleResolvedSound;
-
-        public event EventHandler<BasePuzzle> OnPuzzleResolved;
 
         protected void Awake()
         {

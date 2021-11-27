@@ -10,21 +10,24 @@ namespace Gameplay.Puzzles.LeverSwitches
     public class LeverSwitch : MonoBehaviour, IInteractable
     {
         public event Action<LeverSwitch> OnLeverSwitchToggled;
-
-        private Camera _raycastCamera;
+        [SerializeField] private AudioClip _successBeep;
+        [SerializeField] private AudioClip _errorBeep;
+        [SerializeField] private Material _offMaterial;
+        [SerializeField] private Material _onMaterial;
 
         [SerializeField] private Camera _customRaycastCamera;
 
         [SerializeField] private Renderer _renderer;
 
-        public bool[] onValue { get; private set; }
+
         private bool _isButtonOn = false;
         private bool locked = false;
 
+        private Camera _raycastCamera;
         private AudioSource _audioSource;
 
-        [SerializeField] private AudioClip _successBeep;
-        [SerializeField] private AudioClip _errorBeep;
+        public bool[] onValue { get; private set; }
+
 
         void Awake()
         {
@@ -48,13 +51,15 @@ namespace Gameplay.Puzzles.LeverSwitches
             }
         }
 
-        public void Init(int items) {
+        public void Init(int items)
+        {
             _isButtonOn = false;
             SetMaterial(_offMaterial);
 
             onValue = new bool[items];
 
-            for (var i = 0; i < items; i++) {
+            for (var i = 0; i < items; i++)
+            {
                 onValue[i] = UnityEngine.Random.value > 0.33f;
             }
         }
@@ -72,7 +77,7 @@ namespace Gameplay.Puzzles.LeverSwitches
                     if (hit.collider.gameObject == gameObject)
                     {
                         _isButtonOn = !_isButtonOn;
-                        
+
                         SetMaterial(_isButtonOn ? _onMaterial : _offMaterial);
 
                         OnLeverSwitchToggled.Invoke(this);
@@ -85,7 +90,8 @@ namespace Gameplay.Puzzles.LeverSwitches
 
         public int[] PipeValueCalculationConditional(int[] input)
         {
-            if (!_isButtonOn) {
+            if (!_isButtonOn)
+            {
                 return input;
             }
 
@@ -95,8 +101,9 @@ namespace Gameplay.Puzzles.LeverSwitches
         public int[] PipeValueCalculation(int[] input)
         {
             int[] output = new int[input.Length];
-            
-            for (var i = 0; i < input.Length; i++) {
+
+            for (var i = 0; i < input.Length; i++)
+            {
                 output[i] = input[i] + (onValue[i] ? 1 : 0);
             }
 
@@ -113,8 +120,6 @@ namespace Gameplay.Puzzles.LeverSwitches
             locked = false;
         }
 
-        [SerializeField] private Material _offMaterial;
-        [SerializeField] private Material _onMaterial;
 
         private void SetMaterial(Material material)
         {

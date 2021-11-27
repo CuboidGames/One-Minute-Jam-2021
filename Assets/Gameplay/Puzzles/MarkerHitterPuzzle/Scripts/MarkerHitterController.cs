@@ -11,6 +11,12 @@ namespace Gameplay.Puzzles.MarkerHitter
     {
         [SerializeField] private MarkerHitterButton _hitterButton;
         [SerializeField] private LedLight[] _markerLeds;
+        [SerializeField] private GameObject _pressLabel;
+        [SerializeField] private Material _offMaterial;
+        [SerializeField] private Material _onMaterial;
+
+        [SerializeField] private Renderer _renderer;
+        private bool _lockClick = false;
         private int _currentValidIndex = -1;
 
         public bool canPress { get; private set; }
@@ -24,7 +30,8 @@ namespace Gameplay.Puzzles.MarkerHitter
 
         private void Update()
         {
-            if (!IsLocked) {
+            if (!IsLocked)
+            {
                 SetPressState();
                 SetMarkerVisibility();
             }
@@ -43,7 +50,8 @@ namespace Gameplay.Puzzles.MarkerHitter
 
         private void OnButtonPressed(MarkerHitterButton button)
         {
-            if (_lockClick) {
+            if (_lockClick)
+            {
                 return;
             }
 
@@ -67,7 +75,8 @@ namespace Gameplay.Puzzles.MarkerHitter
             SetResolved(_currentValidIndex == _markerLeds.Length - 1);
         }
 
-        private async void SleepAndReset() {
+        private async void SleepAndReset()
+        {
             _lockClick = true;
 
             await Task.Delay(300);
@@ -80,12 +89,6 @@ namespace Gameplay.Puzzles.MarkerHitter
             _lockClick = false;
         }
 
-        [SerializeField] private GameObject _pressLabel;
-        [SerializeField] private Material _offMaterial;
-        [SerializeField] private Material _onMaterial;
-
-        [SerializeField] private Renderer _renderer;
-        private bool _lockClick = false;
 
         private void SetMaterial(Material material)
         {

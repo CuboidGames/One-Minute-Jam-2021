@@ -8,6 +8,7 @@ namespace Gameplay.Managers.GameStateManager
         {
             gameManager.EnablePlayer();
             gameManager.StartGame();
+
             await sceneTransitionManager.FadeOut();
         }
 
@@ -15,6 +16,7 @@ namespace Gameplay.Managers.GameStateManager
         {
             gameManager.DisablePlayer();
             gameManager.EndGame();
+
             await Task.CompletedTask;
         }
 

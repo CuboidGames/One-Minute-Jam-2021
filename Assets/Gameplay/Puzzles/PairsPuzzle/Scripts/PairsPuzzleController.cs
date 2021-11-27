@@ -37,7 +37,8 @@ namespace Gameplay.Puzzles.Pairs
 
         private void PairButtonRevealed(PairButton pairButton)
         {
-            if (!_lastButton) {
+            if (!_lastButton)
+            {
                 _lastButton = pairButton;
                 pairButton.PlaySuccess();
                 return;

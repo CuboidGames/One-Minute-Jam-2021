@@ -15,27 +15,33 @@ public class LedLight : MonoBehaviour
     [SerializeField] private Material _pinkMaterial;
     [SerializeField] private Renderer _object;
 
-    public void SetOff() {
+    public void SetOff()
+    {
         SetMaterial(_offMaterial);
     }
 
-    public void SetYellow() {
+    public void SetYellow()
+    {
         SetMaterial(_yellowMaterial);
     }
 
-    public void SetRed() {
+    public void SetRed()
+    {
         SetMaterial(_redMaterial);
     }
 
-    public void SetGreen() {
+    public void SetGreen()
+    {
         SetMaterial(_greenMaterial);
     }
 
-    public void SetPink() {
+    public void SetPink()
+    {
         SetMaterial(_pinkMaterial);
     }
 
-    public void SetBlue() {
+    public void SetBlue()
+    {
         SetMaterial(_blueMaterial);
     }
 

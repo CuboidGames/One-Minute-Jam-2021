@@ -11,9 +11,20 @@ namespace Gameplay.Managers
     public class GameManager : MonoBehaviour
     {
 
-        public static GameManager Instance;
+        public static GameManager Instance { get; private set; }
+
+        public event Action OnGameStart;
+        public event Action OnGameComplete;
+        public event Action OnGameEnd;
 
         [SerializeField] private float _gameDuration = 60f;
+        [SerializeField] private Transform playerStartingPosition;
+        [SerializeField] private AdvancedWalkerController playerWalkerController;
+        [SerializeField] private CameraController playerCameraController;
+        [SerializeField] private AudioControl _playerAudioSource;
+        [SerializeField] private List<AudioSource> _gameAudios;
+        [SerializeField] private AudioSource _gameOverAudio;
+        [SerializeField] private Animator _gameOverAnimator;
 
         private float _gameStartTime = 0f;
         private float _currentGameTime = 0f;
@@ -22,12 +33,7 @@ namespace Gameplay.Managers
         public List<BasePuzzle> puzzles { get { return _puzzles; } }
         private GameState gameState;
 
-        public event Action OnGameStart;
-
         public bool exitColliderTouched = false;
-
-        public event Action OnGameComplete;
-        public event Action OnGameEnd;
 
         public float currentGameTime
         {
@@ -38,18 +44,6 @@ namespace Gameplay.Managers
         {
             get { return _currentGameTime / _gameDuration; }
         }
-
-        [SerializeField] private Transform playerStartingPosition;
-
-        [SerializeField] private AdvancedWalkerController playerWalkerController;
-        [SerializeField] private CameraController playerCameraController;
-        [SerializeField] private AudioControl _playerAudioSource;
-
-        [SerializeField] private List<AudioSource> _gameAudios;
-        [SerializeField] private AudioSource _gameOverAudio;
-
-        [SerializeField] private Animator _gameOverAnimator;
-
 
         private void Update()
         {
@@ -63,8 +57,6 @@ namespace Gameplay.Managers
 
         private void Awake()
         {
-            Debug.Log("Game manager initialized");
-
             if (Instance == null)
             {
                 Instance = this;
@@ -110,7 +102,7 @@ namespace Gameplay.Managers
             _currentGameTime = 0f;
             _gameStartTime = Time.time;
             exitColliderTouched = false;
-            
+
             foreach (var puzzle in _puzzles)
             {
                 puzzle.Init();
@@ -122,7 +114,8 @@ namespace Gameplay.Managers
             }
         }
 
-        public async Task PlayGameOver() {
+        public async Task PlayGameOver()
+        {
             foreach (var audio in _gameAudios)
             {
                 audio.Stop();
@@ -136,7 +129,6 @@ namespace Gameplay.Managers
 
         public void UpdateGameProgress()
         {
-            // TODO: Use Time.deltaTime instead to handle states such as pause, animations, etc.
             _currentGameTime = Time.time - _gameStartTime;
 
         }
@@ -169,10 +161,6 @@ namespace Gameplay.Managers
             {
                 await SetInitialState();
             }
-
-            Debug.Log("Current state: " + gameState.GetType().Name);
-            Debug.Log("Next state: " + state);
-
 
             await gameState.OnExit();
             gameState = gameState.Transition(state);

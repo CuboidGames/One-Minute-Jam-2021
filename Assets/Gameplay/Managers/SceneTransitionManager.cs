@@ -8,7 +8,7 @@ namespace Gameplay.Managers
 {
     public class SceneTransitionManager : MonoBehaviour
     {
-        public static SceneTransitionManager Instance;
+        public static SceneTransitionManager Instance { get; private set; }
 
         [SerializeField] private Image _fader;
         void Awake()
@@ -21,7 +21,8 @@ namespace Gameplay.Managers
             Instance = this;
         }
 
-        public async Task FadeIn(float speed) {
+        public async Task FadeIn(float speed)
+        {
             await Fade(0f, 1f, speed);
         }
 
@@ -30,7 +31,8 @@ namespace Gameplay.Managers
             await Fade(0f, 1f, 0.3f);
         }
 
-        public async Task FadeOut(float speed) {
+        public async Task FadeOut(float speed)
+        {
             await Fade(1f, 0f, speed);
         }
 
@@ -39,10 +41,12 @@ namespace Gameplay.Managers
             await Fade(1f, 0f, 0.3f);
         }
 
-        private async Task Fade(float from, float to, float speed) {
+        private async Task Fade(float from, float to, float speed)
+        {
             float currentAlpha = from;
 
-            while (Mathf.Abs(currentAlpha - to) != 0) {
+            while (Mathf.Abs(currentAlpha - to) != 0)
+            {
                 _fader.color = new Color(0, 0, 0, currentAlpha);
                 currentAlpha = Mathf.MoveTowards(currentAlpha, to, speed * Time.deltaTime);
 
@@ -50,7 +54,8 @@ namespace Gameplay.Managers
             }
         }
 
-        public void LoadScene(string sceneName) {
+        public void LoadScene(string sceneName)
+        {
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
         }
     }

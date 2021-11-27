@@ -13,11 +13,13 @@ namespace Gameplay.Managers.GameStateManager
             this.sceneTransitionManager = SceneTransitionManager.Instance;
         }
 
-        public virtual async Task OnEnter() {
+        public virtual async Task OnEnter()
+        {
             await Task.Yield();
         }
 
-        public virtual async Task OnExit() {
+        public virtual async Task OnExit()
+        {
             await Task.Yield();
         }
 

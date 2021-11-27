@@ -26,7 +26,7 @@ namespace Gameplay.Puzzles.MarkerHitter
             UpdateState();
         }
 
-        private void UpdateState() 
+        private void UpdateState()
         {
             _errorLight.gameObject.SetActive(IsError);
             _successLight.gameObject.SetActive(!IsError);
